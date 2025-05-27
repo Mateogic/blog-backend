@@ -29,6 +29,8 @@
         <module>blog-module-admin</module>
         <!-- 通用模块 -->
         <module>blog-module-common</module>
+        <!-- JWT 模块 -->
+        <module>blog-module-jwt</module>
     </modules>
 
 
@@ -52,6 +54,7 @@
         <knife4j.version>4.3.0</knife4j.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
+        <jjwt.version>0.11.2</jjwt.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -110,6 +113,27 @@
                 <groupId>p6spy</groupId>
                 <artifactId>p6spy</artifactId>
                 <version>${p6spy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.mateogic</groupId>
+                <artifactId>blog-module-jwt</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <!--   JWT   -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

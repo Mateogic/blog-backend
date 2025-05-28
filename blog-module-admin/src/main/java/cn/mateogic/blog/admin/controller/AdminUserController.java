@@ -1,6 +1,6 @@
 package cn.mateogic.blog.admin.controller;
 
-import cn.mateogic.blog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import cn.mateogic.blog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 import cn.mateogic.blog.admin.service.AdminUserService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
@@ -27,4 +27,12 @@ public class AdminUserController {
     public Response updatePassword(@RequestBody @Validated UpdateAdminUserPasswordReqVO updateAdminUserPasswordReqVO) {
         return userService.updatePassword(updateAdminUserPasswordReqVO);
     }
+
+    @PostMapping("/user/info")
+    @ApiOperation(value = "获取用户信息")
+    @ApiOperationLog(description = "获取用户信息")
+    public Response findUserInfo() {
+        return userService.findUserInfo();
+    }
+
 }

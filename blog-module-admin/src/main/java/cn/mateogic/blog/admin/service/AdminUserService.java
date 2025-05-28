@@ -1,6 +1,6 @@
 package cn.mateogic.blog.admin.service;
 
-import cn.mateogic.blog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import cn.mateogic.blog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 import cn.mateogic.blog.common.utils.Response;
 
 public interface AdminUserService {
@@ -10,4 +10,9 @@ public interface AdminUserService {
      * @return
      */
     Response updatePassword(UpdateAdminUserPasswordReqVO updateAdminUserPasswordReqVO);
+    /**
+     * 获取当前登录用户信息
+     * @return
+     */
+    Response findUserInfo();
 }

@@ -1,4 +1,4 @@
-package cn.mateogic.blog.admin.model.vo;
+package cn.mateogic.blog.admin.model.vo.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

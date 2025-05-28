@@ -1,11 +1,14 @@
 package cn.mateogic.blog.admin.service.impl;
 
-import cn.mateogic.blog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import cn.mateogic.blog.admin.model.vo.user.FindUserInfoRspVO;
+import cn.mateogic.blog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 import cn.mateogic.blog.admin.service.AdminUserService;
 import cn.mateogic.blog.common.domain.mapper.UserMapper;
 import cn.mateogic.blog.common.enums.ResponseCodeEnum;
 import cn.mateogic.blog.common.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,5 +38,18 @@ public class AdminUserServiceImpl implements AdminUserService {
         int count = userMapper.updatePasswordByUsername(username, encodePassword);
 
         return count == 1 ? Response.success() : Response.fail(ResponseCodeEnum.USERNAME_NOT_FOUND);
+    }
+    /**
+     * 获取当前登录用户信息
+     * @return
+     */
+    @Override
+    public Response findUserInfo() {
+        // 获取存储在 ThreadLocal 中的用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 拿到用户名
+        String username = authentication.getName();
+
+        return Response.success(FindUserInfoRspVO.builder().username(username).build());
     }
 }

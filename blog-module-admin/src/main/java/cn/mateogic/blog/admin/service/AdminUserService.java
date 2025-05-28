@@ -1,0 +1,13 @@
+package cn.mateogic.blog.admin.service;
+
+import cn.mateogic.blog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import cn.mateogic.blog.common.utils.Response;
+
+public interface AdminUserService {
+    /**
+     * 修改密码
+     * @param updateAdminUserPasswordReqVO
+     * @return
+     */
+    Response updatePassword(UpdateAdminUserPasswordReqVO updateAdminUserPasswordReqVO);
+}

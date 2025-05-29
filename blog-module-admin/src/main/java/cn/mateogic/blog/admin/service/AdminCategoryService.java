@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.service;
 
 import cn.mateogic.blog.admin.model.vo.category.AddCategoryReqVO;
+import cn.mateogic.blog.admin.model.vo.category.DeleteCategoryReqVO;
 import cn.mateogic.blog.admin.model.vo.category.FindCategoryPageListReqVO;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
@@ -18,4 +19,10 @@ public interface AdminCategoryService {
      * @return
      */
     PageResponse findCategoryList(FindCategoryPageListReqVO findCategoryPageListReqVO);
+    /**
+     * 删除分类
+     * @param deleteCategoryReqVO
+     * @return
+     */
+    Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO);
 }

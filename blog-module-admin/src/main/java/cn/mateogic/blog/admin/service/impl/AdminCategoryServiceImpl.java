@@ -1,17 +1,18 @@
 package cn.mateogic.blog.admin.service.impl;
 
-import cn.mateogic.blog.common.enums.ResponseCodeEnum;
-import cn.mateogic.blog.common.exception.BizException;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import cn.mateogic.blog.admin.model.vo.category.AddCategoryReqVO;
+import cn.mateogic.blog.admin.model.vo.category.DeleteCategoryReqVO;
 import cn.mateogic.blog.admin.model.vo.category.FindCategoryPageListReqVO;
 import cn.mateogic.blog.admin.model.vo.category.FindCategoryPageListRspVO;
 import cn.mateogic.blog.admin.service.AdminCategoryService;
 import cn.mateogic.blog.common.domain.dos.CategoryDO;
 import cn.mateogic.blog.common.domain.mapper.CategoryMapper;
+import cn.mateogic.blog.common.enums.ResponseCodeEnum;
+import cn.mateogic.blog.common.exception.BizException;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         }
 
         return PageResponse.success(categoryDOPage, vos);
+    }
+    @Override
+    public Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO) {
+        // 分类 ID
+        Long categoryId = deleteCategoryReqVO.getId();
+
+        // 删除分类
+        categoryMapper.deleteById(categoryId);
+
+        return Response.success();
     }
 
 }

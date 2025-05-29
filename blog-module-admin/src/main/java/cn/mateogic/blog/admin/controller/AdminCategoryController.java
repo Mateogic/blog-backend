@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.controller;
 
 import cn.mateogic.blog.admin.model.vo.category.AddCategoryReqVO;
+import cn.mateogic.blog.admin.model.vo.category.DeleteCategoryReqVO;
 import cn.mateogic.blog.admin.model.vo.category.FindCategoryPageListReqVO;
 import cn.mateogic.blog.admin.service.AdminCategoryService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
@@ -35,5 +36,10 @@ public class AdminCategoryController {
     public PageResponse findCategoryList(@RequestBody @Validated FindCategoryPageListReqVO findCategoryPageListReqVO) {
         return categoryService.findCategoryList(findCategoryPageListReqVO);
     }
-
+    @PostMapping("/category/delete")
+    @ApiOperation(value = "删除分类")
+    @ApiOperationLog(description = "删除分类")
+    public Response deleteCategory(@RequestBody @Validated DeleteCategoryReqVO deleteCategoryReqVO) {
+        return categoryService.deleteCategory(deleteCategoryReqVO);
+    }
 }

@@ -25,4 +25,9 @@ public interface AdminCategoryService {
      * @return
      */
     Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO);
+    /**
+     * 获取文章分类的 Select 列表数据
+     * @return
+     */
+    Response findCategorySelectList();
 }

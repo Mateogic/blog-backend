@@ -9,6 +9,7 @@ import cn.mateogic.blog.common.domain.dos.CategoryDO;
 import cn.mateogic.blog.common.domain.mapper.CategoryMapper;
 import cn.mateogic.blog.common.enums.ResponseCodeEnum;
 import cn.mateogic.blog.common.exception.BizException;
+import cn.mateogic.blog.common.model.vo.SelectRspVO;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -111,6 +112,26 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         categoryMapper.deleteById(categoryId);
 
         return Response.success();
+    }
+    @Override
+    public Response findCategorySelectList() {
+        // 查询所有分类
+        List<CategoryDO> categoryDOS = categoryMapper.selectList(null);
+
+        // DO 转 VO
+        List<SelectRspVO> selectRspVOS = null;
+        // 如果分类数据不为空
+        if (!CollectionUtils.isEmpty(categoryDOS)) {
+            // 将分类 ID 作为 Value 值，将分类名称作为 label 展示
+            selectRspVOS = categoryDOS.stream()
+                    .map(categoryDO -> SelectRspVO.builder()
+                            .label(categoryDO.getName())
+                            .value(categoryDO.getId())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+
+        return Response.success(selectRspVOS);
     }
 
 }

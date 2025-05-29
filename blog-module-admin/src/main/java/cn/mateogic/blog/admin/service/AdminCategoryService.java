@@ -1,6 +1,8 @@
 package cn.mateogic.blog.admin.service;
 
 import cn.mateogic.blog.admin.model.vo.category.AddCategoryReqVO;
+import cn.mateogic.blog.admin.model.vo.category.FindCategoryPageListReqVO;
+import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
 
 public interface AdminCategoryService {
@@ -10,4 +12,10 @@ public interface AdminCategoryService {
      * @return
      */
     Response addCategory(AddCategoryReqVO addCategoryReqVO);
+    /**
+     * 分类分页数据查询
+     * @param findCategoryPageListReqVO
+     * @return
+     */
+    PageResponse findCategoryList(FindCategoryPageListReqVO findCategoryPageListReqVO);
 }

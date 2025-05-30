@@ -3,6 +3,7 @@ package cn.mateogic.blog.admin.controller;
 import cn.mateogic.blog.admin.model.vo.tag.AddTagReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.DeleteTagReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListReqVO;
+import cn.mateogic.blog.admin.model.vo.tag.SearchTagsReqVO;
 import cn.mateogic.blog.admin.service.AdminTagService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.PageResponse;
@@ -41,6 +42,12 @@ public class AdminTagController {
     @ApiOperationLog(description = "删除标签")
     public Response deleteTag(@RequestBody @Validated DeleteTagReqVO deleteTagReqVO) {
         return tagService.deleteTag(deleteTagReqVO);
+    }
+    @PostMapping("/search")
+    @ApiOperation(value = "标签模糊查询")
+    @ApiOperationLog(description = "标签模糊查询")
+    public Response searchTags(@RequestBody @Validated SearchTagsReqVO searchTagsReqVO) {
+        return tagService.searchTags(searchTagsReqVO);
     }
     @PostMapping("/select/list")
     @ApiOperation(value = "查询标签 Select 列表数据")

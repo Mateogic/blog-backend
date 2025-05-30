@@ -1,9 +1,6 @@
 package cn.mateogic.blog.admin.service.impl;
 
-import cn.mateogic.blog.admin.model.vo.tag.AddTagReqVO;
-import cn.mateogic.blog.admin.model.vo.tag.DeleteTagReqVO;
-import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListReqVO;
-import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListRspVO;
+import cn.mateogic.blog.admin.model.vo.tag.*;
 import cn.mateogic.blog.admin.service.AdminTagService;
 import cn.mateogic.blog.common.domain.dos.ArticleTagRelDO;
 import cn.mateogic.blog.common.domain.dos.TagDO;
@@ -113,6 +110,32 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         int count = tagMapper.deleteById(tagId);
 
         return count == 1 ? Response.success() : Response.fail(ResponseCodeEnum.TAG_NOT_EXISTED);
+    }
+    /**
+     * 根据标签关键词模糊查询
+     *
+     * @param searchTagsReqVO
+     * @return
+     */
+    @Override
+    public Response searchTags(SearchTagsReqVO searchTagsReqVO) {
+        String key = searchTagsReqVO.getKey();
+
+        // 执行模糊查询
+        List<TagDO> tagDOS = tagMapper.selectByKey(key);
+
+        // do 转 vo
+        List<SelectRspVO> vos = null;
+        if (!org.springframework.util.CollectionUtils.isEmpty(tagDOS)) {
+            vos = tagDOS.stream()
+                    .map(tagDO -> SelectRspVO.builder()
+                            .label(tagDO.getName())
+                            .value(tagDO.getId())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+
+        return Response.success(vos);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public interface TagMapper extends BaseMapper<TagDO> {
@@ -19,5 +20,18 @@ public interface TagMapper extends BaseMapper<TagDO> {
                 .le(Objects.nonNull(endDate), TagDO::getCreateTime, endDate) // 结束日期
                 .orderByDesc(TagDO::getCreateTime); // 按创建时间降序
         return selectPage(page, wrapper);
+    }
+    /**
+     * 根据标签模糊查询
+     * @param key
+     * @return
+     */
+    default List<TagDO> selectByKey(String key) {
+        LambdaQueryWrapper<TagDO> wrapper = new LambdaQueryWrapper<>();
+
+        // 构造模糊查询的条件
+        wrapper.like(TagDO::getName, key).orderByDesc(TagDO::getCreateTime);
+
+        return selectList(wrapper);
     }
 }

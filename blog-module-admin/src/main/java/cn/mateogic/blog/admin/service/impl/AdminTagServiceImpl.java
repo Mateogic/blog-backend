@@ -7,9 +7,11 @@ import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListRspVO;
 import cn.mateogic.blog.admin.service.AdminTagService;
 import cn.mateogic.blog.common.domain.dos.TagDO;
 import cn.mateogic.blog.common.domain.mapper.TagMapper;
+import cn.mateogic.blog.common.model.vo.SelectRspVO;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -91,4 +93,24 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         int count = tagMapper.deleteById(tagId);
         return count == 1 ? Response.success() : Response.fail(TAG_NOT_EXISTED);
     }
+
+    @Override
+    public Response findTagSelectList() {
+        // 查询所有标签, Wrappers.emptyWrapper() 表示查询条件为空
+        List<TagDO> tagDOS = tagMapper.selectList(Wrappers.emptyWrapper());
+
+        // DO 转 VO
+        List<SelectRspVO> vos = null;
+        if (!CollectionUtils.isEmpty(tagDOS)) {
+            vos = tagDOS.stream()
+                    .map(tagDO -> SelectRspVO.builder()
+                            .label(tagDO.getName())
+                            .value(tagDO.getId())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+
+        return Response.success(vos);
+    }
+
 }

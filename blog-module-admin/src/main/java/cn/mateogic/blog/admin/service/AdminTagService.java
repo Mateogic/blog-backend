@@ -14,4 +14,9 @@ public interface AdminTagService {
     PageResponse findTagPageList(FindTagPageListReqVO findTagPageListReqVO);
 
     Response deleteTag(DeleteTagReqVO deleteTagReqVO);
+    /**
+     * 查询标签 Select 列表数据
+     * @return
+     */
+    Response findTagSelectList();
 }

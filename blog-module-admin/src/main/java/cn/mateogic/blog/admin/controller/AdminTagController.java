@@ -42,6 +42,12 @@ public class AdminTagController {
     public Response deleteTag(@RequestBody @Validated DeleteTagReqVO deleteTagReqVO) {
         return tagService.deleteTag(deleteTagReqVO);
     }
+    @PostMapping("/select/list")
+    @ApiOperation(value = "查询标签 Select 列表数据")
+    @ApiOperationLog(description = "查询标签 Select 列表数据")
+    public Response findTagSelectList() {
+        return tagService.findTagSelectList();
+    }
 //    @PostMapping("/category/select/list")
 //    @ApiOperation(value = "分类 Select 下拉列表数据获取")
 //    @ApiOperationLog(description = "分类 Select 下拉列表数据获取")

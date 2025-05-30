@@ -12,10 +12,8 @@ import cn.mateogic.blog.common.exception.BizException;
 import cn.mateogic.blog.common.model.vo.SelectRspVO;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -63,29 +61,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     }
 
     @Override
-    public PageResponse findCategoryList(FindCategoryPageListReqVO findCategoryPageListReqVO) {
+    public PageResponse findCategoryPageList(FindCategoryPageListReqVO findCategoryPageListReqVO) {
         // 获取当前页、以及每页需要展示的数据数量
         Long current = findCategoryPageListReqVO.getCurrent();
         Long size = findCategoryPageListReqVO.getSize();
-
-        // 分页对象(查询第几页、每页多少数据)
-        Page<CategoryDO> page = new Page<>(current, size);
-
-        // 构建查询条件
-        LambdaQueryWrapper<CategoryDO> wrapper = new LambdaQueryWrapper<>();
-
         String name = findCategoryPageListReqVO.getName();
         LocalDate startDate = findCategoryPageListReqVO.getStartDate();
         LocalDate endDate = findCategoryPageListReqVO.getEndDate();
 
-        wrapper
-                .like(StringUtils.isNotBlank(name), CategoryDO::getName, name.trim()) // like 模块查询
-                .ge(Objects.nonNull(startDate), CategoryDO::getCreateTime, startDate) // 大于等于 startDate
-                .le(Objects.nonNull(endDate), CategoryDO::getCreateTime, endDate)  // 小于等于 endDate
-                .orderByDesc(CategoryDO::getCreateTime); // 按创建时间倒叙
-
         // 执行分页查询
-        Page<CategoryDO> categoryDOPage = categoryMapper.selectPage(page, wrapper);
+        Page<CategoryDO> categoryDOPage = categoryMapper.selectPageList(current, size, name, startDate, endDate);
 
         List<CategoryDO> categoryDOS = categoryDOPage.getRecords();
 

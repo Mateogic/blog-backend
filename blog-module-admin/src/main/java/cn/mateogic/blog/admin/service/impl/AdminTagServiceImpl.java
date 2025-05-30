@@ -5,8 +5,12 @@ import cn.mateogic.blog.admin.model.vo.tag.DeleteTagReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListRspVO;
 import cn.mateogic.blog.admin.service.AdminTagService;
+import cn.mateogic.blog.common.domain.dos.ArticleTagRelDO;
 import cn.mateogic.blog.common.domain.dos.TagDO;
+import cn.mateogic.blog.common.domain.mapper.ArticleTagRelMapper;
 import cn.mateogic.blog.common.domain.mapper.TagMapper;
+import cn.mateogic.blog.common.enums.ResponseCodeEnum;
+import cn.mateogic.blog.common.exception.BizException;
 import cn.mateogic.blog.common.model.vo.SelectRspVO;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
@@ -21,9 +25,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static cn.mateogic.blog.common.enums.ResponseCodeEnum.TAG_NOT_EXISTED;
 
 
 @Service
@@ -32,6 +35,8 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
 
     @Autowired
     private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagRelMapper articleTagRelMapper;
 
     @Override
     public Response addTags(AddTagReqVO addTagReqVO) {
@@ -85,13 +90,29 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         return PageResponse.success(page, vos);
     }
 
+    /**
+     * 删除标签
+     *
+     * @param deleteTagReqVO
+     * @return
+     */
     @Override
     public Response deleteTag(DeleteTagReqVO deleteTagReqVO) {
-        // 获取标签 ID
+        // 标签 ID
         Long tagId = deleteTagReqVO.getId();
-        // 根据 ID 删除标签
+
+        // 校验该标签下是否有关联的文章，若有，则不允许删除，提示用户需要先删除标签下的文章
+        ArticleTagRelDO articleTagRelDO = articleTagRelMapper.selectOneByTagId(tagId);
+
+        if (Objects.nonNull(articleTagRelDO)) {
+            log.warn("==> 此标签下包含文章，无法删除，tagId: {}", tagId);
+            throw new BizException(ResponseCodeEnum.TAG_CAN_NOT_DELETE);
+        }
+
+        // 根据标签 ID 删除
         int count = tagMapper.deleteById(tagId);
-        return count == 1 ? Response.success() : Response.fail(TAG_NOT_EXISTED);
+
+        return count == 1 ? Response.success() : Response.fail(ResponseCodeEnum.TAG_NOT_EXISTED);
     }
 
     @Override

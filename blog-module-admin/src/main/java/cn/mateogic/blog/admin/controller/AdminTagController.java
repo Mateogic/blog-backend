@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.controller;
 
 import cn.mateogic.blog.admin.model.vo.tag.AddTagReqVO;
+import cn.mateogic.blog.admin.model.vo.tag.DeleteTagReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListReqVO;
 import cn.mateogic.blog.admin.service.AdminTagService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
@@ -35,12 +36,12 @@ public class AdminTagController {
     public PageResponse findTagPageList(@RequestBody @Validated FindTagPageListReqVO findTagPageListReqVO) {
         return tagService.findTagPageList(findTagPageListReqVO);
     }
-//    @PostMapping("/category/delete")
-//    @ApiOperation(value = "删除分类")
-//    @ApiOperationLog(description = "删除分类")
-//    public Response deleteCategory(@RequestBody @Validated DeleteCategoryReqVO deleteCategoryReqVO) {
-//        return categoryService.deleteCategory(deleteCategoryReqVO);
-//    }
+    @PostMapping("/tag/delete")
+    @ApiOperation(value = "删除标签")
+    @ApiOperationLog(description = "删除标签")
+    public Response deleteTag(@RequestBody @Validated DeleteTagReqVO deleteTagReqVO) {
+        return tagService.deleteTag(deleteTagReqVO);
+    }
 //    @PostMapping("/category/select/list")
 //    @ApiOperation(value = "分类 Select 下拉列表数据获取")
 //    @ApiOperationLog(description = "分类 Select 下拉列表数据获取")

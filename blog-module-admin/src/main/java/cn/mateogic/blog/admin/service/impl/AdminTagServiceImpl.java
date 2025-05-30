@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.service.impl;
 
 import cn.mateogic.blog.admin.model.vo.tag.AddTagReqVO;
+import cn.mateogic.blog.admin.model.vo.tag.DeleteTagReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListReqVO;
 import cn.mateogic.blog.admin.model.vo.tag.FindTagPageListRspVO;
 import cn.mateogic.blog.admin.service.AdminTagService;
@@ -19,6 +20,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static cn.mateogic.blog.common.enums.ResponseCodeEnum.TAG_NOT_EXISTED;
 
 
 @Service
@@ -78,5 +81,14 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
                     .build()).collect(Collectors.toList());
         }
         return PageResponse.success(page, vos);
+    }
+
+    @Override
+    public Response deleteTag(DeleteTagReqVO deleteTagReqVO) {
+        // 获取标签 ID
+        Long tagId = deleteTagReqVO.getId();
+        // 根据 ID 删除标签
+        int count = tagMapper.deleteById(tagId);
+        return count == 1 ? Response.success() : Response.fail(TAG_NOT_EXISTED);
     }
 }

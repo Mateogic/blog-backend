@@ -2,7 +2,16 @@ package cn.mateogic.blog.common.domain.mapper;
 
 import cn.mateogic.blog.common.config.InsertBatchMapper;
 import cn.mateogic.blog.common.domain.dos.ArticleTagRelDO;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 public interface ArticleTagRelMapper extends InsertBatchMapper<ArticleTagRelDO> {
-
+    /**
+     * 根据文章 ID 删除关联记录
+     * @param articleId
+     * @return
+     */
+    default int deleteByArticleId(Long articleId) {
+        return delete(Wrappers.<ArticleTagRelDO>lambdaQuery()
+                .eq(ArticleTagRelDO::getArticleId, articleId));
+    }
 }

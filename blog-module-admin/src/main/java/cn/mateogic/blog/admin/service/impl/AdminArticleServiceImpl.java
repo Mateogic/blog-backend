@@ -1,5 +1,6 @@
 package cn.mateogic.blog.admin.service.impl;
 
+import cn.mateogic.blog.admin.model.vo.article.DeleteArticleReqVO;
 import cn.mateogic.blog.admin.model.vo.article.PublishArticleReqVO;
 import cn.mateogic.blog.admin.service.AdminArticleService;
 import cn.mateogic.blog.common.domain.dos.*;
@@ -88,6 +89,33 @@ public class AdminArticleServiceImpl implements AdminArticleService {
 
         return Response.success();
     }
+
+    /**
+     * 删除文章
+     *
+     * @param deleteArticleReqVO
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response deleteArticle(DeleteArticleReqVO deleteArticleReqVO) {
+        Long articleId = deleteArticleReqVO.getId();
+
+        // 1. 删除文章
+        articleMapper.deleteById(articleId);
+
+        // 2. 删除文章内容
+        articleContentMapper.deleteByArticleId(articleId);
+
+        // 3. 删除文章-分类关联记录
+        articleCategoryRelMapper.deleteByArticleId(articleId);
+
+        // 4. 删除文章-标签关联记录
+        articleTagRelMapper.deleteByArticleId(articleId);
+
+        return Response.success();
+    }
+
 
     /**
      * 保存标签

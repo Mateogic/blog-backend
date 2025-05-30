@@ -1,5 +1,6 @@
 package cn.mateogic.blog.admin.service;
 
+import cn.mateogic.blog.admin.model.vo.article.DeleteArticleReqVO;
 import cn.mateogic.blog.admin.model.vo.article.PublishArticleReqVO;
 import cn.mateogic.blog.common.utils.Response;
 
@@ -10,4 +11,10 @@ public interface AdminArticleService {
      * @return
      */
     Response publishArticle(PublishArticleReqVO publishArticleReqVO);
+    /**
+     * 删除文章
+     * @param deleteArticleReqVO
+     * @return
+     */
+    Response deleteArticle(DeleteArticleReqVO deleteArticleReqVO);
 }

@@ -18,3 +18,11 @@ spring:
     user:
       name: mateogic
       password: Ljc13512881480!
+#=================================================================
+# minio
+#=================================================================
+minio:
+  endpoint: https://minio.mateogic.cn
+  accessKey: mateogic
+  secretKey: Ljc13512881480!
+  bucketName: blog

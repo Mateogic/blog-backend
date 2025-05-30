@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.controller;
 
 import cn.mateogic.blog.admin.model.vo.article.DeleteArticleReqVO;
+import cn.mateogic.blog.admin.model.vo.article.FindArticleDetailReqVO;
 import cn.mateogic.blog.admin.model.vo.article.FindArticlePageListReqVO;
 import cn.mateogic.blog.admin.model.vo.article.PublishArticleReqVO;
 import cn.mateogic.blog.admin.service.AdminArticleService;
@@ -44,6 +45,12 @@ public class AdminArticleController {
     @ApiOperationLog(description = "查询文章分页数据")
     public Response findArticlePageList(@RequestBody @Validated FindArticlePageListReqVO findArticlePageListReqVO) {
         return articleService.findArticlePageList(findArticlePageListReqVO);
+    }
+    @PostMapping("/detail")
+    @ApiOperation(value = "查询文章详情")
+    @ApiOperationLog(description = "查询文章详情")
+    public Response findArticleDetail(@RequestBody @Validated FindArticleDetailReqVO findArticlePageListReqVO) {
+        return articleService.findArticleDetail(findArticlePageListReqVO);
     }
 
 }

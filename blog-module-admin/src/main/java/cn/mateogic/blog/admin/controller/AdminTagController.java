@@ -17,26 +17,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/tag")
 @Api(tags = "Admin 标签模块")
 public class AdminTagController {
 
     @Autowired
     private AdminTagService tagService;
 
-    @PostMapping("/tag/add")
+    @PostMapping("/add")
     @ApiOperation(value = "添加标签")
     @ApiOperationLog(description = "添加标签")
     public Response addTag(@RequestBody @Validated AddTagReqVO addTagReqVO) {
         return tagService.addTags(addTagReqVO);
     }
-    @PostMapping("/tag/list")
+    @PostMapping("/list")
     @ApiOperation(value = "标签分页数据获取")
     @ApiOperationLog(description = "标签分页数据获取")
     public PageResponse findTagPageList(@RequestBody @Validated FindTagPageListReqVO findTagPageListReqVO) {
         return tagService.findTagPageList(findTagPageListReqVO);
     }
-    @PostMapping("/tag/delete")
+    @PostMapping("/delete")
     @ApiOperation(value = "删除标签")
     @ApiOperationLog(description = "删除标签")
     public Response deleteTag(@RequestBody @Validated DeleteTagReqVO deleteTagReqVO) {
@@ -48,11 +48,4 @@ public class AdminTagController {
     public Response findTagSelectList() {
         return tagService.findTagSelectList();
     }
-//    @PostMapping("/category/select/list")
-//    @ApiOperation(value = "分类 Select 下拉列表数据获取")
-//    @ApiOperationLog(description = "分类 Select 下拉列表数据获取")
-//    public Response findCategorySelectList() {
-//        return categoryService.findCategorySelectList();
-//    }
-
 }

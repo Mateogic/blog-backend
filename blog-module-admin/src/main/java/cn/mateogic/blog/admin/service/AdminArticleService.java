@@ -1,9 +1,6 @@
 package cn.mateogic.blog.admin.service;
 
-import cn.mateogic.blog.admin.model.vo.article.DeleteArticleReqVO;
-import cn.mateogic.blog.admin.model.vo.article.FindArticleDetailReqVO;
-import cn.mateogic.blog.admin.model.vo.article.FindArticlePageListReqVO;
-import cn.mateogic.blog.admin.model.vo.article.PublishArticleReqVO;
+import cn.mateogic.blog.admin.model.vo.article.*;
 import cn.mateogic.blog.common.utils.Response;
 
 public interface AdminArticleService {
@@ -31,4 +28,10 @@ public interface AdminArticleService {
      * @return
      */
     Response findArticleDetail(FindArticleDetailReqVO findArticleDetailReqVO);
+    /**
+     * 更新文章
+     * @param updateArticleReqVO
+     * @return
+     */
+    Response updateArticle(UpdateArticleReqVO updateArticleReqVO);
 }

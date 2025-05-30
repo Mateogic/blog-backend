@@ -1,5 +1,6 @@
 package cn.mateogic.blog.admin.convert;
 
+import cn.mateogic.blog.admin.model.vo.blogsettings.FindBlogSettingsRspVO;
 import cn.mateogic.blog.admin.model.vo.blogsettings.UpdateBlogSettingsReqVO;
 import cn.mateogic.blog.common.domain.dos.BlogSettingsDO;
 import org.mapstruct.Mapper;
@@ -18,5 +19,10 @@ public interface BlogSettingsConvert {
      * @return
      */
     BlogSettingsDO convertVO2DO(UpdateBlogSettingsReqVO bean);
-
+    /**
+     * 将 DO 转化为 VO
+     * @param bean
+     * @return
+     */
+    FindBlogSettingsRspVO convertDO2VO(BlogSettingsDO bean);
 }

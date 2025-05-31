@@ -9,4 +9,9 @@ public interface AdminDashboardService {
      * @return
      */
     Response findDashboardStatistics();
+    /**
+     * 获取文章发布热点统计信息
+     * @return
+     */
+    Response findDashboardPublishArticleStatistics();
 }

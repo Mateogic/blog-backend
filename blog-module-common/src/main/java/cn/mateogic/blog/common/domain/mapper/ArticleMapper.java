@@ -1,11 +1,13 @@
 package cn.mateogic.blog.common.domain.mapper;
 
 import cn.mateogic.blog.common.domain.dos.ArticleDO;
+import cn.mateogic.blog.common.domain.dos.ArticlePublishCountDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -94,4 +96,15 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
         return selectList(Wrappers.<ArticleDO>lambdaQuery()
                 .select(ArticleDO::getReadNum));
     }
+    /**
+     * 按日分组，并统计每日发布的文章数量
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @Select("SELECT DATE(create_time) AS date, COUNT(*) AS count\n" +
+            "FROM t_article\n" +
+            "WHERE create_time >= #{startDate} AND create_time < #{endDate}\n" +
+            "GROUP BY DATE(create_time)")
+    List<ArticlePublishCountDO> selectDateArticlePublishCount(LocalDate startDate, LocalDate endDate);
 }

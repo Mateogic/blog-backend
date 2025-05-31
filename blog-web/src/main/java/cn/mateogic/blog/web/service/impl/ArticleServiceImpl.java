@@ -1,5 +1,6 @@
 package cn.mateogic.blog.web.service.impl;
 
+import cn.mateogic.blog.admin.event.ReadArticleEvent;
 import cn.mateogic.blog.common.domain.dos.*;
 import cn.mateogic.blog.common.domain.mapper.*;
 import cn.mateogic.blog.common.enums.ResponseCodeEnum;
@@ -18,6 +19,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +44,8 @@ public class ArticleServiceImpl implements ArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     /**
      * 获取首页文章分页数据
@@ -197,7 +201,8 @@ public class ArticleServiceImpl implements ArticleService {
                     .build();
             vo.setNextArticle(nextArticleVO);
         }
-
+        // 发布文章阅读事件
+        eventPublisher.publishEvent(new ReadArticleEvent(this, articleId));
         return Response.success(vo);
     }
 }

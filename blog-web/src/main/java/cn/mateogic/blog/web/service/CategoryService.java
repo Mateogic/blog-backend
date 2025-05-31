@@ -1,6 +1,7 @@
 package cn.mateogic.blog.web.service;
 
 import cn.mateogic.blog.common.utils.Response;
+import cn.mateogic.blog.web.model.vo.category.FindCategoryArticlePageListReqVO;
 
 public interface CategoryService {
     /**
@@ -8,4 +9,10 @@ public interface CategoryService {
      * @return
      */
     Response findCategoryList();
+    /**
+     * 获取分类下文章分页数据
+     * @param findCategoryArticlePageListReqVO
+     * @return
+     */
+    Response findCategoryArticlePageList(FindCategoryArticlePageListReqVO findCategoryArticlePageListReqVO);
 }

@@ -36,7 +36,7 @@ class BlogWebApplicationTests {
         // 构建数据库实体类
         UserDO userDO = UserDO.builder()
                 .username("mateogic")
-                .password("Ljc13512881480!")
+                .password("password")
                 .createTime(new Date())
                 .updateTime(new Date())
                 .isDeleted(false)

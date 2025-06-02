@@ -62,7 +62,10 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>cn.mateogic</groupId>
+            <artifactId>blog-module-search</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -13,7 +13,6 @@ import cn.mateogic.blog.web.model.vo.article.*;
 import cn.mateogic.blog.web.model.vo.category.FindCategoryListRspVO;
 import cn.mateogic.blog.web.model.vo.tag.FindTagListRspVO;
 import cn.mateogic.blog.web.service.ArticleService;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
@@ -21,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -136,6 +136,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         return PageResponse.success(articleDOPage, vos);
     }
+
     /**
      * 获取文章详情
      *
@@ -201,8 +202,10 @@ public class ArticleServiceImpl implements ArticleService {
                     .build();
             vo.setNextArticle(nextArticleVO);
         }
+
         // 发布文章阅读事件
         eventPublisher.publishEvent(new ReadArticleEvent(this, articleId));
+
         return Response.success(vo);
     }
 }

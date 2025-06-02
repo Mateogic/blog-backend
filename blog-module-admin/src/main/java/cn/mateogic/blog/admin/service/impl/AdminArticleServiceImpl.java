@@ -1,6 +1,9 @@
 package cn.mateogic.blog.admin.service.impl;
 
 import cn.mateogic.blog.admin.convert.ArticleDetailConvert;
+import cn.mateogic.blog.admin.event.DeleteArticleEvent;
+import cn.mateogic.blog.admin.event.PublishArticleEvent;
+import cn.mateogic.blog.admin.event.UpdateArticleEvent;
 import cn.mateogic.blog.admin.model.vo.article.*;
 import cn.mateogic.blog.admin.service.AdminArticleService;
 import cn.mateogic.blog.common.domain.dos.*;
@@ -9,13 +12,15 @@ import cn.mateogic.blog.common.enums.ResponseCodeEnum;
 import cn.mateogic.blog.common.exception.BizException;
 import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,6 +46,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     /**
      * 发布文章
      *
@@ -85,10 +93,13 @@ public class AdminArticleServiceImpl implements AdminArticleService {
                 .categoryId(categoryId)
                 .build();
         articleCategoryRelMapper.insert(articleCategoryRelDO);
-//        int i = 10 / 0; // 模拟异常，测试事务回滚
+
         // 4. 保存文章关联的标签集合
         List<String> publishTags = publishArticleReqVO.getTags();
         insertTags(articleId, publishTags);
+
+        // 发送文章发布事件
+        eventPublisher.publishEvent(new PublishArticleEvent(this, articleId));
 
         return Response.success();
     }
@@ -116,6 +127,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         // 4. 删除文章-标签关联记录
         articleTagRelMapper.deleteByArticleId(articleId);
 
+        // 发布文章删除事件
+        eventPublisher.publishEvent(new DeleteArticleEvent(this, articleId));
+
         return Response.success();
     }
 
@@ -141,7 +155,7 @@ public class AdminArticleServiceImpl implements AdminArticleService {
 
         // DO 转 VO
         List<FindArticlePageListRspVO> vos = null;
-        if (!CollectionUtils.isEmpty(articleDOS)) {
+        if (!org.springframework.util.CollectionUtils.isEmpty(articleDOS)) {
             vos = articleDOS.stream()
                     .map(articleDO -> FindArticlePageListRspVO.builder()
                             .id(articleDO.getId())
@@ -158,10 +172,11 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     /**
      * 查询文章详情
      *
+     * @param findArticleDetailReqVO
      * @return
      */
     @Override
-    public Response findArticleDetail(FindArticleDetailReqVO findArticleDetailReqVO) {
+    public Response<FindArticleDetailRspVO> findArticleDetail(FindArticleDetailReqVO findArticleDetailReqVO) {
         Long articleId = findArticleDetailReqVO.getId();
 
         ArticleDO articleDO = articleMapper.selectById(articleId);
@@ -190,6 +205,12 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         return Response.success(vo);
     }
 
+    /**
+     * 更新文章
+     *
+     * @param updateArticleReqVO
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response updateArticle(UpdateArticleReqVO updateArticleReqVO) {
@@ -243,10 +264,11 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         List<String> publishTags = updateArticleReqVO.getTags();
         insertTags(articleId, publishTags);
 
+        // 发布文章修改事件
+        eventPublisher.publishEvent(new UpdateArticleEvent(this, articleId));
+
         return Response.success();
     }
-
-
 
     /**
      * 保存标签
@@ -260,10 +282,10 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         List<String> existedTags = null;
 
         // 查询出所有标签
-        List<TagDO> tagDOS = tagMapper.selectList(null);
+        List<TagDO> tagDOS = tagMapper.selectList(Wrappers.emptyWrapper());
 
         // 如果表中还没有添加任何标签
-        if (CollectionUtils.isEmpty(tagDOS)) {
+        if (org.springframework.util.CollectionUtils.isEmpty(tagDOS)) {
             notExistTags = publishTags;
         } else {
             List<String> tagIds = tagDOS.stream().map(tagDO -> String.valueOf(tagDO.getId())).collect(Collectors.toList());
@@ -273,7 +295,6 @@ public class AdminArticleServiceImpl implements AdminArticleService {
             // 否则则是不存在的
             notExistTags = publishTags.stream().filter(publishTag -> !tagIds.contains(publishTag)).collect(Collectors.toList());
 
-            // 补充逻辑：
             // 还有一种可能：按字符串名称提交上来的标签，也有可能是表中已存在的，比如表中已经有了 Java 标签，用户提交了个 java 小写的标签，需要内部装换为 Java 标签
             Map<String, Long> tagNameIdMap = tagDOS.stream().collect(Collectors.toMap(tagDO -> tagDO.getName().toLowerCase(), TagDO::getId));
 
@@ -292,7 +313,7 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         }
 
         // 将提交的上来的，已存在于表中的标签，文章-标签关联关系入库
-        if (!CollectionUtils.isEmpty(existedTags)) {
+        if (!org.springframework.util.CollectionUtils.isEmpty(existedTags)) {
             List<ArticleTagRelDO> articleTagRelDOS = Lists.newArrayList();
             existedTags.forEach(tagId -> {
                 ArticleTagRelDO articleTagRelDO = ArticleTagRelDO.builder()

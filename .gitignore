@@ -34,3 +34,6 @@ build/
 ### yml ###
 application-dev.yml
 application-prod.yml
+###  lucene ###
+/lucene-index
+*.log

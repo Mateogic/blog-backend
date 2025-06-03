@@ -33,4 +33,4 @@ minio:
 # Lucene 全文检索
 #=================================================================
 lucene:
-  indexDir: /root/wp/blog/lucene-index # lucene 索引存放的位置
+  indexDir: ./lucene-index # lucene 索引存放的位置

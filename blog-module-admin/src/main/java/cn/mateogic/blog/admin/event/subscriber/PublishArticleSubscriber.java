@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.event.subscriber;
 
 import cn.mateogic.blog.admin.event.PublishArticleEvent;
+import cn.mateogic.blog.admin.service.AdminStatisticsService;
 import cn.mateogic.blog.common.constant.Constants;
 import cn.mateogic.blog.common.domain.dos.ArticleContentDO;
 import cn.mateogic.blog.common.domain.dos.ArticleDO;
@@ -27,6 +28,8 @@ public class PublishArticleSubscriber implements ApplicationListener<PublishArti
     private ArticleMapper articleMapper;
     @Autowired
     private ArticleContentMapper articleContentMapper;
+    @Autowired
+    private AdminStatisticsService statisticsService;
 
     @Override
     @Async("threadPoolTaskExecutor")
@@ -58,5 +61,11 @@ public class PublishArticleSubscriber implements ApplicationListener<PublishArti
         long count = luceneHelper.addDocument(ArticleIndex.NAME, document);
 
         log.info("==> 添加文章对应 Lucene 文档结束，articleId: {}，受影响行数: {}", articleId, count);
+        // 重新统计各分类下文章总数
+        statisticsService.statisticsCategoryArticleTotal();
+        log.info("==> 重新统计各分类下文章总数");
+        // 重新统计各标签下文章总数
+        statisticsService.statisticsTagArticleTotal();
+        log.info("==> 重新统计各标签下文章总数");
     }
 }

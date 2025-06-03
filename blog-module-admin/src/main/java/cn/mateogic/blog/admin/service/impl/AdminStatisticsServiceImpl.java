@@ -2,9 +2,13 @@ package cn.mateogic.blog.admin.service.impl;
 
 import cn.mateogic.blog.admin.service.AdminStatisticsService;
 import cn.mateogic.blog.common.domain.dos.ArticleCategoryRelDO;
+import cn.mateogic.blog.common.domain.dos.ArticleTagRelDO;
 import cn.mateogic.blog.common.domain.dos.CategoryDO;
+import cn.mateogic.blog.common.domain.dos.TagDO;
 import cn.mateogic.blog.common.domain.mapper.ArticleCategoryRelMapper;
+import cn.mateogic.blog.common.domain.mapper.ArticleTagRelMapper;
 import cn.mateogic.blog.common.domain.mapper.CategoryMapper;
+import cn.mateogic.blog.common.domain.mapper.TagMapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.google.common.collect.Maps;
@@ -24,6 +28,10 @@ public class AdminStatisticsServiceImpl implements AdminStatisticsService {
     private CategoryMapper categoryMapper;
     @Autowired
     private ArticleCategoryRelMapper articleCategoryRelMapper;
+    @Autowired
+    private TagMapper tagMapper;
+    @Autowired
+    private ArticleTagRelMapper articleTagRelMapper;
 
     @Override
     public void statisticsCategoryArticleTotal() {
@@ -57,6 +65,45 @@ public class AdminStatisticsServiceImpl implements AdminStatisticsService {
                         .articlesTotal(articlesTotal)
                         .build();
                 categoryMapper.updateById(categoryDO1);
+            }
+        }
+    }
+    /**
+     * 统计各标签下文章总数
+     */
+    @Override
+    public void statisticsTagArticleTotal() {
+        // 查询所有标签
+        List<TagDO> tagDOS = tagMapper.selectList(Wrappers.emptyWrapper());
+
+        // 查询所有文章-标签映射记录
+        List<ArticleTagRelDO> articleTagRelDOS = articleTagRelMapper.selectList(Wrappers.emptyWrapper());
+
+        // 按所属标签 ID 进行分组
+        Map<Long, List<ArticleTagRelDO>> tagIdAndArticleTagRelDOMap = Maps.newHashMap();
+        // 如果不为空
+        if (!CollectionUtils.isEmpty(articleTagRelDOS)) {
+            tagIdAndArticleTagRelDOMap = articleTagRelDOS.stream()
+                    .collect(Collectors.groupingBy(ArticleTagRelDO::getTagId));
+        }
+
+        if (!CollectionUtils.isEmpty(tagDOS)) {
+            // 循环统计各标签下的文章总数
+            for (TagDO tagDO : tagDOS) {
+                Long tagId = tagDO.getId();
+
+                // 获取此标签下所有映射记录
+                List<ArticleTagRelDO> articleTagRelDOList = tagIdAndArticleTagRelDOMap.get(tagId);
+
+                // 获取文章总数
+                int articlesTotal = CollectionUtils.isEmpty(articleTagRelDOList) ? 0 : articleTagRelDOList.size();
+
+                // 更新该标签的文章总数
+                TagDO tagDO1 = TagDO.builder()
+                        .id(tagId)
+                        .articlesTotal(articlesTotal)
+                        .build();
+                tagMapper.updateById(tagDO1);
             }
         }
     }

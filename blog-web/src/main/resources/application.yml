@@ -1,7 +1,7 @@
 spring:
   profiles:
     # 默认激活 dev 环境
-    active: dev
+    active: prod
   servlet:
     multipart:
       max-file-size: 100MB # 限制单个上传文件的最大大小为 100MB。如果上传的文件大小超过这个值，将会被拒绝上传。

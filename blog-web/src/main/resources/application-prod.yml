@@ -1,0 +1,36 @@
+#=================================================================
+# log 日志(只需要在生产环境生效)
+#=================================================================
+logging:
+  config: classpath:logback-blog.xml
+server:
+  port: 8080 # 项目运行端口，默认 8080
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://182.92.127.179:3306/blog?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: Ljc13512881480!
+    # 使用 HikariCP 连接池
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: blog-HikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+#=================================================================
+# minio
+#=================================================================
+minio:
+  endpoint: https://minio.mateogic.cn
+  accessKey: mateogic
+  secretKey: Ljc13512881480!
+  bucketName: blog
+#=================================================================
+# Lucene 全文检索
+#=================================================================
+lucene:
+  indexDir: ./lucene-index # lucene 索引存放的位置

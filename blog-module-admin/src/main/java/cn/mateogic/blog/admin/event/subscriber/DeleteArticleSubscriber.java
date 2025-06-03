@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.event.subscriber;
 
 import cn.mateogic.blog.admin.event.DeleteArticleEvent;
+import cn.mateogic.blog.admin.service.AdminStatisticsService;
 import cn.mateogic.blog.search.LuceneHelper;
 import cn.mateogic.blog.search.index.ArticleIndex;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ public class DeleteArticleSubscriber implements ApplicationListener<DeleteArticl
 
     @Autowired
     private LuceneHelper luceneHelper;
+    @Autowired
+    private AdminStatisticsService statisticsService;
 
     @Override
     @Async("threadPoolTaskExecutor")
@@ -35,5 +38,8 @@ public class DeleteArticleSubscriber implements ApplicationListener<DeleteArticl
         long count = luceneHelper.deleteDocument(ArticleIndex.NAME, condition);
 
         log.info("==> 删除文章对应 Lucene 文档结束，articleId: {}，受影响行数: {}", articleId, count);
+        // 重新统计各分类下文章总数
+        statisticsService.statisticsCategoryArticleTotal();
+        log.info("==> 重新统计各分类下文章总数");
     }
 }

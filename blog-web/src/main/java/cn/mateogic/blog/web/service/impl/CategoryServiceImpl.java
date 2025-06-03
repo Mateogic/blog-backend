@@ -13,6 +13,7 @@ import cn.mateogic.blog.common.utils.Response;
 import cn.mateogic.blog.web.convert.ArticleConvert;
 import cn.mateogic.blog.web.model.vo.category.FindCategoryArticlePageListReqVO;
 import cn.mateogic.blog.web.model.vo.category.FindCategoryArticlePageListRspVO;
+import cn.mateogic.blog.web.model.vo.category.FindCategoryListReqVO;
 import cn.mateogic.blog.web.model.vo.category.FindCategoryListRspVO;
 import cn.mateogic.blog.web.service.CategoryService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -42,9 +43,18 @@ public class CategoryServiceImpl implements CategoryService {
      * @return
      */
     @Override
-    public Response findCategoryList() {
-        // 查询所有分类
-        List<CategoryDO> categoryDOS = categoryMapper.selectList(Wrappers.emptyWrapper());
+    public Response findCategoryList(FindCategoryListReqVO findCategoryListReqVO) {
+        Long size = findCategoryListReqVO.getSize();
+
+        List<CategoryDO> categoryDOS = null;
+        // 如果接口入参中未指定 size
+        if (Objects.isNull(size) || size == 0) {
+            // 查询所有分类
+            categoryDOS = categoryMapper.selectList(Wrappers.emptyWrapper());
+        } else {
+            // 否则查询指定的数量
+            categoryDOS = categoryMapper.selectByLimit(size);
+        }
 
         // DO 转 VO
         List<FindCategoryListRspVO> vos = null;

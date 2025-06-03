@@ -3,6 +3,7 @@ package cn.mateogic.blog.web.controller;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
 import cn.mateogic.blog.web.model.vo.tag.FindTagArticlePageListReqVO;
+import cn.mateogic.blog.web.model.vo.tag.FindTagListReqVO;
 import cn.mateogic.blog.web.service.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,8 +25,8 @@ public class TagController {
     @PostMapping("/list")
     @ApiOperation(value = "前台获取标签列表")
     @ApiOperationLog(description = "前台获取标签列表")
-    public Response findTagList() {
-        return tagService.findTagList();
+    public Response findTagList(@RequestBody @Validated FindTagListReqVO findTagListReqVO) {
+        return tagService.findTagList(findTagListReqVO);
     }
     @PostMapping("/article/list")
     @ApiOperation(value = "前台获取标签下文章列表")

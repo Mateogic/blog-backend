@@ -3,6 +3,7 @@ package cn.mateogic.blog.web.controller;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
 import cn.mateogic.blog.web.model.vo.category.FindCategoryArticlePageListReqVO;
+import cn.mateogic.blog.web.model.vo.category.FindCategoryListReqVO;
 import cn.mateogic.blog.web.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,8 +25,8 @@ public class CategoryController {
     @PostMapping("/list")
     @ApiOperation(value = "前台获取分类列表")
     @ApiOperationLog(description = "前台获取分类列表")
-    public Response findCategoryList() {
-        return categoryService.findCategoryList();
+    public Response findCategoryList(@RequestBody @Validated FindCategoryListReqVO findCategoryListReqVO) {
+        return categoryService.findCategoryList(findCategoryListReqVO);
     }
     @PostMapping("/article/list")
     @ApiOperation(value = "前台获取分类下文章分页数据")

@@ -13,6 +13,7 @@ import cn.mateogic.blog.common.utils.Response;
 import cn.mateogic.blog.web.convert.ArticleConvert;
 import cn.mateogic.blog.web.model.vo.tag.FindTagArticlePageListReqVO;
 import cn.mateogic.blog.web.model.vo.tag.FindTagArticlePageListRspVO;
+import cn.mateogic.blog.web.model.vo.tag.FindTagListReqVO;
 import cn.mateogic.blog.web.model.vo.tag.FindTagListRspVO;
 import cn.mateogic.blog.web.service.TagService;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -43,13 +44,20 @@ public class TagServiceImpl implements TagService {
      * @return
      */
     @Override
-    public Response findTagList() {
-        // 查询所有标签
-        List<TagDO> tagDOS = tagMapper.selectList(Wrappers.emptyWrapper());
+    public Response findTagList(FindTagListReqVO findTagListReqVO) {
+        Long size = findTagListReqVO.getSize();
+
+        List<TagDO> tagDOS = null;
+        if (Objects.isNull(size) || size == 0) {
+            // 查询所有标签
+            tagDOS = tagMapper.selectList(Wrappers.emptyWrapper());
+        } else {
+            tagDOS = tagMapper.selectByLimit(size);
+        }
 
         // DO 转 VO
         List<FindTagListRspVO> vos = null;
-        if (!CollectionUtils.isEmpty(tagDOS)) {
+        if (!org.springframework.util.CollectionUtils.isEmpty(tagDOS)) {
             vos = tagDOS.stream()
                     .map(tagDO -> FindTagListRspVO.builder()
                             .id(tagDO.getId())

@@ -4,9 +4,11 @@ import cn.mateogic.blog.common.domain.dos.CategoryDO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public interface CategoryMapper extends BaseMapper<CategoryDO> {
@@ -38,5 +40,15 @@ public interface CategoryMapper extends BaseMapper<CategoryDO> {
                 .le(Objects.nonNull(endDate), CategoryDO::getCreateTime, endDate)  // 小于等于 endDate
                 .orderByDesc(CategoryDO::getCreateTime); // 按创建时间倒叙
         return selectPage(page, wrapper);
+    }
+    /**
+     * 查询时指定数量
+     * @param limit
+     * @return
+     */
+    default List<CategoryDO> selectByLimit(Long limit) {
+        return selectList(Wrappers.<CategoryDO>lambdaQuery()
+                .orderByDesc(CategoryDO::getArticlesTotal) // 根据文章总数降序
+                .last(String.format("LIMIT %d", limit))); // 查询指定数量
     }
 }

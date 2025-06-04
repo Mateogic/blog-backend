@@ -40,7 +40,7 @@ public class Knife4jConfig {
                 .title("blog 博客前台接口文档") // 标题
                 .description("blog 是一款由 Spring Boot + Vue 3.2 + Vite 4.3 开发的前后端分离博客。") // 描述
                 .termsOfServiceUrl("https://www.mateogic.cn/") // API 服务条款
-                .contact(new Contact("mateogic", "https://www.mateogic.cn", "ljc_2318516761@163.com")) // 联系人
+                .contact(new Contact("mateogic", "https://mateogic.cn", "ljc_2318516761@163.com")) // 联系人
                 .version("1.0") // 版本号
                 .build();
     }

@@ -155,13 +155,14 @@ public class AdminArticleServiceImpl implements AdminArticleService {
 
         // DO 转 VO
         List<FindArticlePageListRspVO> vos = null;
-        if (!org.springframework.util.CollectionUtils.isEmpty(articleDOS)) {
+        if (!CollectionUtils.isEmpty(articleDOS)) {
             vos = articleDOS.stream()
                     .map(articleDO -> FindArticlePageListRspVO.builder()
                             .id(articleDO.getId())
                             .title(articleDO.getTitle())
                             .cover(articleDO.getCover())
                             .createTime(articleDO.getCreateTime())
+                            .isTop(articleDO.getWeight() > 0) // 是否置顶
                             .build())
                     .collect(Collectors.toList());
         }

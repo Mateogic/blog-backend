@@ -32,5 +32,8 @@ public class FindArticlePageListRspVO  {
      * 发布时间
      */
     private LocalDateTime createTime;
-
+    /**
+     * 是否置顶
+     */
+    private Boolean isTop;
 }

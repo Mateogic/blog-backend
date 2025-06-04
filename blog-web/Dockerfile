@@ -18,7 +18,7 @@ ENV JAVA_OPTS="-Xms300m -Xmx300m -Djava.security.egd=file:/dev/./urandom"
 ENV ARGS=""
 
 # 暴露 8080 端口
-EXPOSE 8080
+EXPOSE 8081
 
 # 启动后端服务
 CMD java ${JAVA_OPTS} -jar app.jar $ARGS

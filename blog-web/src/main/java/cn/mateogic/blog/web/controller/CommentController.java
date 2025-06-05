@@ -2,7 +2,9 @@ package cn.mateogic.blog.web.controller;
 
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
+import cn.mateogic.blog.web.model.vo.comment.FindCommentListReqVO;
 import cn.mateogic.blog.web.model.vo.comment.FindQQUserInfoReqVO;
+import cn.mateogic.blog.web.model.vo.comment.PublishCommentReqVO;
 import cn.mateogic.blog.web.service.CommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,5 +29,16 @@ public class CommentController {
     public Response findQQUserInfo(@RequestBody @Validated FindQQUserInfoReqVO findQQUserInfoReqVO) {
         return commentService.findQQUserInfo(findQQUserInfoReqVO);
     }
-
+    @PostMapping("/publish")
+    @ApiOperation(value = "发布评论")
+    @ApiOperationLog(description = "发布评论")
+    public Response publishComment(@RequestBody @Validated PublishCommentReqVO publishCommentReqVO) {
+        return commentService.publishComment(publishCommentReqVO);
+    }
+    @PostMapping("/list")
+    @ApiOperation(value = "获取页面所有评论")
+    @ApiOperationLog(description = "获取页面所有评论")
+    public Response findPageComments(@RequestBody @Validated FindCommentListReqVO findCommentListReqVO) {
+        return commentService.findCommentList(findCommentListReqVO);
+    }
 }

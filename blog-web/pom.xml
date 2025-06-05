@@ -78,6 +78,10 @@
             <groupId>cn.mateogic</groupId>
             <artifactId>blog-module-search</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.toolgood</groupId>
+            <artifactId>toolgood-words</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -35,4 +35,10 @@ public interface AdminWikiService {
      * @return
      */
     Response updateWikiIsPublish(UpdateWikiIsPublishReqVO updateWikiIsPublishReqVO);
+    /**
+     * 更新知识库
+     * @param updateWikiReqVO
+     * @return
+     */
+    Response updateWiki(UpdateWikiReqVO updateWikiReqVO);
 }

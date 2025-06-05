@@ -1,5 +1,6 @@
 package cn.mateogic.blog.admin.service;
 
+import cn.mateogic.blog.admin.model.vo.comment.DeleteCommentReqVO;
 import cn.mateogic.blog.admin.model.vo.comment.FindCommentPageListReqVO;
 import cn.mateogic.blog.common.utils.Response;
 
@@ -11,5 +12,10 @@ public interface AdminCommentService {
      * @return
      */
     Response findCommentPageList(FindCommentPageListReqVO findCommentPageListReqVO);
-
+    /**
+     * 删除评论
+     * @param deleteCommentReqVO
+     * @return
+     */
+    Response deleteComment(DeleteCommentReqVO deleteCommentReqVO);
 }

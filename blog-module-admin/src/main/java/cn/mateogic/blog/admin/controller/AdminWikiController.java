@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.controller;
 
 import cn.mateogic.blog.admin.model.vo.wiki.AddWikiReqVO;
+import cn.mateogic.blog.admin.model.vo.wiki.DeleteWikiReqVO;
 import cn.mateogic.blog.admin.service.AdminWikiService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
@@ -28,6 +29,13 @@ public class AdminWikiController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response addWiki(@RequestBody @Validated AddWikiReqVO addWikiReqVO) {
         return wikiService.addWiki(addWikiReqVO);
+    }
+    @PostMapping("/delete")
+    @ApiOperation(value = "知识库删除")
+    @ApiOperationLog(description = "知识库删除")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Response deleteWiki(@RequestBody @Validated DeleteWikiReqVO deleteWikiReqVO) {
+        return wikiService.deleteWiki(deleteWikiReqVO);
     }
 
 }

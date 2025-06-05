@@ -1,12 +1,15 @@
 package cn.mateogic.blog.admin.service.impl;
 
 import cn.mateogic.blog.admin.convert.CommentConvert;
+import cn.mateogic.blog.admin.event.UpdateCommentEvent;
 import cn.mateogic.blog.admin.model.vo.comment.DeleteCommentReqVO;
+import cn.mateogic.blog.admin.model.vo.comment.ExamineCommentReqVO;
 import cn.mateogic.blog.admin.model.vo.comment.FindCommentPageListReqVO;
 import cn.mateogic.blog.admin.model.vo.comment.FindCommentPageListRspVO;
 import cn.mateogic.blog.admin.service.AdminCommentService;
 import cn.mateogic.blog.common.domain.dos.CommentDO;
 import cn.mateogic.blog.common.domain.mapper.CommentMapper;
+import cn.mateogic.blog.common.enums.CommentStatusEnum;
 import cn.mateogic.blog.common.enums.ResponseCodeEnum;
 import cn.mateogic.blog.common.exception.BizException;
 import cn.mateogic.blog.common.utils.PageResponse;
@@ -15,10 +18,12 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,7 +34,8 @@ public class AdminCommentServiceImpl implements AdminCommentService {
 
     @Autowired
     private CommentMapper commentMapper;
-
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
     /**
      * 查询评论分页数据
      *
@@ -94,6 +100,49 @@ public class AdminCommentServiceImpl implements AdminCommentService {
             // 删除此评论, 以及此评论下的所有回复
             deleteAllChildComment(commentId);
         }
+
+        return Response.success();
+    }
+    /**
+     * 评论审核
+     *
+     * @param examineCommentReqVO
+     * @return
+     */
+    @Override
+    public Response examine(ExamineCommentReqVO examineCommentReqVO) {
+        Long commentId = examineCommentReqVO.getId();
+        Integer status = examineCommentReqVO.getStatus();
+        String reason = examineCommentReqVO.getReason();
+
+        // 根据提交的评论 ID 查询该条评论
+        CommentDO commentDO = commentMapper.selectById(commentId);
+
+        // 判空
+        if (Objects.isNull(commentDO)) {
+            log.warn("该评论不存在, commentId: {}", commentId);
+            throw new BizException(ResponseCodeEnum.COMMENT_NOT_FOUND);
+        }
+
+        // 评论当前状态
+        Integer currStatus = commentDO.getStatus();
+
+        // 若未处于待审核状态
+        if (!Objects.equals(currStatus, CommentStatusEnum.WAIT_EXAMINE.getCode())) {
+            log.warn("该评论未处于待审核状态, commentId: {}", commentId);
+            throw new BizException(ResponseCodeEnum.COMMENT_STATUS_NOT_WAIT_EXAMINE);
+        }
+
+        // 更新评论
+        commentMapper.updateById(CommentDO.builder()
+                .id(commentId)
+                .status(status)
+                .reason(reason)
+                .updateTime(LocalDateTime.now())
+                .build());
+
+        // 发送文章发布事件
+        eventPublisher.publishEvent(new UpdateCommentEvent(this, commentId));
 
         return Response.success();
     }

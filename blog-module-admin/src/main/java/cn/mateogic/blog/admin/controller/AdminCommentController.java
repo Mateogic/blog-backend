@@ -1,6 +1,7 @@
 package cn.mateogic.blog.admin.controller;
 
 import cn.mateogic.blog.admin.model.vo.comment.DeleteCommentReqVO;
+import cn.mateogic.blog.admin.model.vo.comment.ExamineCommentReqVO;
 import cn.mateogic.blog.admin.model.vo.comment.FindCommentPageListReqVO;
 import cn.mateogic.blog.admin.service.AdminCommentService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
@@ -35,5 +36,12 @@ public class AdminCommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response deleteComment(@RequestBody @Validated DeleteCommentReqVO deleteCommentReqVO) {
         return commentService.deleteComment(deleteCommentReqVO);
+    }
+    @PostMapping("/examine")
+    @ApiOperation(value = "评论审核")
+    @ApiOperationLog(description = "评论审核")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Response examinePass(@RequestBody @Validated ExamineCommentReqVO examineCommentReqVO) {
+        return commentService.examine(examineCommentReqVO);
     }
 }

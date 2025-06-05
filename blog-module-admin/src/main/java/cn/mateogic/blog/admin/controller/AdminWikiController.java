@@ -1,8 +1,6 @@
 package cn.mateogic.blog.admin.controller;
 
-import cn.mateogic.blog.admin.model.vo.wiki.AddWikiReqVO;
-import cn.mateogic.blog.admin.model.vo.wiki.DeleteWikiReqVO;
-import cn.mateogic.blog.admin.model.vo.wiki.FindWikiPageListReqVO;
+import cn.mateogic.blog.admin.model.vo.wiki.*;
 import cn.mateogic.blog.admin.service.AdminWikiService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
@@ -44,5 +42,20 @@ public class AdminWikiController {
     public Response findWikiPageList(@RequestBody @Validated FindWikiPageListReqVO findWikiPageListReqVO) {
         return wikiService.findWikiPageList(findWikiPageListReqVO);
     }
+    @PostMapping("/isTop/update")
+    @ApiOperation(value = "更新知识库置顶状态")
+    @ApiOperationLog(description = "更新知识库置顶状态")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Response updateWikiIsTop(@RequestBody @Validated UpdateWikiIsTopReqVO updateWikiIsTopReqVO) {
+        return wikiService.updateWikiIsTop(updateWikiIsTopReqVO);
+    }
+    @PostMapping("/isPublish/update")
+    @ApiOperation(value = "更新知识库发布状态")
+    @ApiOperationLog(description = "更新知识库发布状态")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Response updateWikiIsPublish(@RequestBody @Validated UpdateWikiIsPublishReqVO updateWikiIsPublishReqVO) {
+        return wikiService.updateWikiIsPublish(updateWikiIsPublishReqVO);
+    }
+
 
 }

@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 @Service
 @Slf4j
 public class ArticleServiceImpl implements ArticleService {
@@ -163,8 +164,10 @@ public class ArticleServiceImpl implements ArticleService {
         // 查询正文
         ArticleContentDO articleContentDO = articleContentMapper.selectByArticleId(articleId);
         String content = articleContentDO.getContent();
+
         // 计算 md 正文字数
         Integer totalWords = MarkdownStatsUtil.calculateWordCount(content);
+
         // DO 转 VO
         FindArticleDetailRspVO vo = FindArticleDetailRspVO.builder()
                 .title(articleDO.getTitle())
@@ -173,6 +176,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .readNum(articleDO.getReadNum())
                 .totalWords(totalWords)
                 .readTime(MarkdownStatsUtil.calculateReadingTime(totalWords))
+                .updateTime(articleDO.getUpdateTime())
                 .build();
 
         // 查询所属分类

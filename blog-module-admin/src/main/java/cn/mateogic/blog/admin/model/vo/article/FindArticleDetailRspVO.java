@@ -47,5 +47,4 @@ public class FindArticleDetailRspVO {
      * 摘要
      */
     private String summary;
-
 }

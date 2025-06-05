@@ -63,4 +63,10 @@ public class AdminWikiController {
     public Response updateWiki(@RequestBody @Validated UpdateWikiReqVO updateWikiReqVO) {
         return wikiService.updateWiki(updateWikiReqVO);
     }
+    @PostMapping("/catalog/list")
+    @ApiOperation(value = "查询知识库目录数据")
+    @ApiOperationLog(description = "查询知识库目录数据")
+    public Response findWikiCatalogList(@RequestBody @Validated FindWikiCatalogListReqVO findWikiCatalogListReqVO) {
+        return wikiService.findWikiCatalogList(findWikiCatalogListReqVO);
+    }
 }

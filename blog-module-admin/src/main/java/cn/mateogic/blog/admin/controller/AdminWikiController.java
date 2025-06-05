@@ -2,6 +2,7 @@ package cn.mateogic.blog.admin.controller;
 
 import cn.mateogic.blog.admin.model.vo.wiki.AddWikiReqVO;
 import cn.mateogic.blog.admin.model.vo.wiki.DeleteWikiReqVO;
+import cn.mateogic.blog.admin.model.vo.wiki.FindWikiPageListReqVO;
 import cn.mateogic.blog.admin.service.AdminWikiService;
 import cn.mateogic.blog.common.aspect.ApiOperationLog;
 import cn.mateogic.blog.common.utils.Response;
@@ -36,6 +37,12 @@ public class AdminWikiController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response deleteWiki(@RequestBody @Validated DeleteWikiReqVO deleteWikiReqVO) {
         return wikiService.deleteWiki(deleteWikiReqVO);
+    }
+    @PostMapping("/list")
+    @ApiOperation(value = "查询知识库分页数据")
+    @ApiOperationLog(description = "查询知识库分页数据")
+    public Response findWikiPageList(@RequestBody @Validated FindWikiPageListReqVO findWikiPageListReqVO) {
+        return wikiService.findWikiPageList(findWikiPageListReqVO);
     }
 
 }

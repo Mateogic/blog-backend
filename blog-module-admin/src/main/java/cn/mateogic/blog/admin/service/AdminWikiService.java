@@ -2,6 +2,7 @@ package cn.mateogic.blog.admin.service;
 
 import cn.mateogic.blog.admin.model.vo.wiki.AddWikiReqVO;
 import cn.mateogic.blog.admin.model.vo.wiki.DeleteWikiReqVO;
+import cn.mateogic.blog.admin.model.vo.wiki.FindWikiPageListReqVO;
 import cn.mateogic.blog.common.utils.Response;
 
 public interface AdminWikiService {
@@ -18,4 +19,10 @@ public interface AdminWikiService {
      * @return
      */
     Response deleteWiki(DeleteWikiReqVO deleteWikiReqVO);
+    /**
+     * 知识库分页查询
+     * @param findWikiPageListReqVO
+     * @return
+     */
+    Response findWikiPageList(FindWikiPageListReqVO findWikiPageListReqVO);
 }

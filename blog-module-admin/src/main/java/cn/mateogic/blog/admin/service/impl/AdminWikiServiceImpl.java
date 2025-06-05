@@ -1,7 +1,10 @@
 package cn.mateogic.blog.admin.service.impl;
 
+import cn.mateogic.blog.admin.convert.WikiConvert;
 import cn.mateogic.blog.admin.model.vo.wiki.AddWikiReqVO;
 import cn.mateogic.blog.admin.model.vo.wiki.DeleteWikiReqVO;
+import cn.mateogic.blog.admin.model.vo.wiki.FindWikiPageListReqVO;
+import cn.mateogic.blog.admin.model.vo.wiki.FindWikiPageListRspVO;
 import cn.mateogic.blog.admin.service.AdminWikiService;
 import cn.mateogic.blog.common.domain.dos.ArticleDO;
 import cn.mateogic.blog.common.domain.dos.WikiCatalogDO;
@@ -13,13 +16,16 @@ import cn.mateogic.blog.common.enums.ArticleTypeEnum;
 import cn.mateogic.blog.common.enums.ResponseCodeEnum;
 import cn.mateogic.blog.common.enums.WikiCatalogLevelEnum;
 import cn.mateogic.blog.common.exception.BizException;
+import cn.mateogic.blog.common.utils.PageResponse;
 import cn.mateogic.blog.common.utils.Response;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -106,5 +112,38 @@ public class AdminWikiServiceImpl implements AdminWikiService {
         wikiCatalogMapper.deleteByWikiId(wikiId);
         return Response.success();
     }
+    /**
+     * 知识库分页查询
+     *
+     * @param findWikiPageListReqVO
+     * @return
+     */
+    @Override
+    public Response findWikiPageList(FindWikiPageListReqVO findWikiPageListReqVO) {
+        // 获取当前页、以及每页需要展示的数据数量
+        Long current = findWikiPageListReqVO.getCurrent();
+        Long size = findWikiPageListReqVO.getSize();
+        // 查询条件
+        String title = findWikiPageListReqVO.getTitle();
+        LocalDate startDate = findWikiPageListReqVO.getStartDate();
+        LocalDate endDate = findWikiPageListReqVO.getEndDate();
+
+        // 执行分页查询
+        Page<WikiDO> wikiDOPage = wikiMapper.selectPageList(current, size, title, startDate, endDate, null);
+
+        // 获取查询记录
+        List<WikiDO> wikiDOS = wikiDOPage.getRecords();
+
+        // DO 转 VO
+        List<FindWikiPageListRspVO> vos = null;
+        if (!CollectionUtils.isEmpty(wikiDOS)) {
+            vos = wikiDOS.stream()
+                    .map(articleDO -> WikiConvert.INSTANCE.convertDO2VO(articleDO))
+                    .collect(Collectors.toList());
+        }
+
+        return PageResponse.success(wikiDOPage, vos);
+    }
+
 
 }

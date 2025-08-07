@@ -24,6 +24,7 @@ start(){
     echo "${APP_NAME} is already running. pid=${pid} ."
   else
     nohup java -jar $APP_NAME -Xms200m -Xmx200m --spring.profiles.active=prod > /dev/null 2>&1 &
+    echo "${APP_NAME} is starting."
   fi
 }
 
@@ -32,6 +33,7 @@ stop(){
   is_exist
   if [ $? -eq "0" ]; then
     kill -9 $pid
+    echo "${APP_NAME} is stopped."
   else
     echo "${APP_NAME} is not running"
   fi
@@ -71,4 +73,3 @@ case "$1" in
     usage
     ;;
 esac
-
